@@ -5,7 +5,10 @@
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "Commander": {
-        "$path": "src"
+        "$path": "loader",
+        "MainModule": {
+          "$path": "src"
+        }
       }
     }
   }
