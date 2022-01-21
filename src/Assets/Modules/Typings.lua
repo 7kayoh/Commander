@@ -1,3 +1,5 @@
+export type GroupConfig = {Id: string, Name: string, Commands: string|{string}}
+
 export type MainConfig = {
     Administration: {
         Users: {
@@ -5,11 +7,7 @@ export type MainConfig = {
             Value: string, -- Value that accepts
             Group: string} -- Which group it belongs to
         },
-        Groups: {
-            {Id: string, -- Special identifier for the group, must not have space or any symbols
-            Name: string, -- Name for the group
-            Commands: string|{string}} -- Commands allowed to use, "*" for all commands
-        },
+        Groups: {GroupConfig},
         CommandFeatures: {any}, -- Additional configuration for a specific command
     },
 
@@ -26,6 +24,7 @@ export type MainConfig = {
 
     Misc: {
         DataStoreKey: string,
+        CacheTimeout: number,
         MaxLogs: number,
         Debugging: boolean,
         GlobAPI: {

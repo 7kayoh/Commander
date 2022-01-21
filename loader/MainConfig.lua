@@ -52,6 +52,7 @@ Module.Interface = {
 
 Module.Misc = {
     DataStoreKey = "commander",
+    CacheTimeout = 3600, -- Cache clears out per hour, by default
     MaxLogs = 2000,
     Debugging = true,
     GlobAPI = {
