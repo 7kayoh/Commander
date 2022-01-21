@@ -5,13 +5,6 @@
 local Main = {}
 local Commander = script.Parent.Parent
 
-Main.Extensions = {
-    Player = {
-        Checkers = {},
-        WrapperDataFetcher = {}
-    }
-}
-
 Main.ACCEPTED_PACKAGE_TYPE = {"Commands", "Extensions", "Stylesheets"}
 
 Main.Assets = Commander.Assets
