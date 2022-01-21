@@ -4,7 +4,7 @@
 
 local Network = {}
 
-function Network._OnInit()
+function Network._onInit()
     Network._OnInit = nil
     require(script.EventRunner)
     require(script.FunctionRunner)

@@ -126,7 +126,7 @@ function Player.addDataFetcher(fetcher: ModuleScript): boolean
     warn("Fetcher " .. fetcher:GetFullName() .. " already added")
 end
 
-function Player._OnInit()
+function Player._onInit()
     Player._OnInit = nil
     require(script.Runner)
 end

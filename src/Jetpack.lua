@@ -51,7 +51,7 @@ return function(configuration: ModuleScript, packages: Folder)
     local MainAPI = require(Core.Main)
     for _, API: ModuleScript in ipairs(Core:GetChildren()) do
         if API ~= Core.Main then
-            require(API)._OnInit()
+            require(API)._onInit()
         end
     end
 
