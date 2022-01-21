@@ -2,17 +2,18 @@
 -- First-run script for Commander, to set up things for initialization
 -- 7kayoh
 -- Jan 16, 2022
+local Players = game:GetService("Players")
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Assets = script.Parent.Assets
-local Packages = script.Parent.Packages
 local Configs = script.Parent.Configs
+local Core = script.Parent.Core
+local Packages = script.Parent.Packages
 local Remotes = script.Parent.Remotes
 local Modules = Assets.Modules
 
 local Typings = require(Modules.Typings)
-local Log = require(Assets.Shared.Log)
 
 local function moveSharedAssets()
     local sharedFolder = Instance.new("Folder")
@@ -23,7 +24,6 @@ local function moveSharedAssets()
     sharedFolder.Parent = ReplicatedStorage
 
     require(Assets.Shared)(sharedFolder)
-    Log(4, "Moved shared assets to " .. sharedFolder:GetFullName())
 end
 
 local function setupRemotes()
@@ -35,21 +35,30 @@ local function setupRemotes()
     remotesFolder.Parent = ReplicatedStorage
 
     require(Remotes)(remotesFolder)
-    Log(4, "Moved remotes to " .. remotesFolder:GetFullName())
 end
 
 return function(configuration: ModuleScript, packages: Folder)
-    Log(1, "Setting up Commander...")
+    print("Setting up Commander...")
     local loadedConfig: Typings.MainConfig = require(configuration) -- For typechecking purposes
-    Log.DebugMode = loadedConfig.Misc.Debugging
 
-    Log(4, "Running Jetpack...")
+    print("Running Jetpack...")
     moveSharedAssets()
     setupRemotes()
+    configuration.Name = "MainConfig"
     configuration.Parent = Configs
     packages.Parent = Packages.Unloaded
 
-    -- TODO: Write Core first, then setup packages with the Core module
-    -- TODO: Write EventRunner in Core, require and call it here
+    local MainAPI = require(Core.Main)
+    for _, API: ModuleScript in ipairs(Core:GetChildren()) do
+        if API ~= Core.Main then
+            require(API)._OnInit()
+        end
+    end
+
+    for _, package in ipairs(packages) do
+        MainAPI.addPackage(package)
+    end
+
+    -- TBD
     -- Should be done afterward.
 end
