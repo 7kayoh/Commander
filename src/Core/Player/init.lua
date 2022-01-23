@@ -4,7 +4,6 @@
 
 
 local Player = {}
-
 Player.Extensions = {
     Checkers = {},
     PlayerProfile = {
@@ -13,7 +12,6 @@ Player.Extensions = {
 }
 
 local MainAPI = require(script.Parent.Main)
-
 local SharedAssets = require(MainAPI.Assets.Shared)
 
 local Kache = require(SharedAssets.Kache)
@@ -53,14 +51,6 @@ function Player.isAdmin(userId: number): boolean
     return Player.getAdminInfo(userId) ~= nil
 end
 
-function Player.getCharacter(player: Player): Model
-    -- Thinking whether to switch to CharacterAdded for more immediate response
-    -- However, CharacterAdded is fired when a model of the humanoid is added
-    -- Body parts & appearance is not fully loaded, which may not be a good
-    -- idea for a lot of character-specific commands
-    return player.Character or player.CharacterAppearanceLoaded:Wait()
-end
-
 function Player.getProfile(player: Player): {any}
     local profile = {
         Packages = {},
@@ -79,9 +69,17 @@ function Player.getProfile(player: Player): {any}
     end
     function profile.Character(): Model?
         if profile._instance then
-            return Player.getCharacter(profile._instance)
+            return profile._instance.Character or profile._instance.CharacterAppearanceLoaded:Wait()
         end
-        warn("Player" .. profile.UserId .. " left already")
+        warn("Player " .. profile.UserId .. " left already")
+    end
+
+    function profile.Latency(): number?
+        if profile._instance then
+            return profile._instance:GetNetworkPing()
+        end
+
+        warn("Player " .. profile.UserId .. " left already")
     end
 
     function profile:GetPackage(Id: string): {any}?
