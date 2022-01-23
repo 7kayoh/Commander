@@ -48,6 +48,10 @@ export type BasePackage = {
     Container: {any} -- Container for the package, can store functions or data for that package
 }
 
+export type DatabaseBindings = {
+    any
+}
+
 local module = {}
 
 return module
