@@ -2,7 +2,10 @@
 -- 7kayoh
 -- Jan 24, 2022
 
-local Data = {}
+local Data = {
+    _bindings = nil,
+    Binded = false
+}
 
 local MainAPI = require(script.Parent.Main)
 local SharedAssets = require(MainAPI.Assets.Shared)
@@ -27,10 +30,11 @@ function Data.set(name: string, key: string, value: any): (boolean, string?)
 end
 
 function Data.bind(bindings: ModuleScript): boolean
+    if Data.Binded then return end
     local bindings: Typings.DataAPIBinding = require(bindings)
     bindings._onInit()
     Data._bindings = bindings
-    Data.bind = nil
+    Data.Binded = true
 
     return true
 end
