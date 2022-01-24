@@ -7,7 +7,7 @@ local Players = game:GetService("Players")
 local PlayerAPI = require(script.Parent)
 
 Players.PlayerAdded:Connect(function(player: Player)
-    PlayerAPI.getAdminInfo(player) -- TBD: Cache first, faster loading in other scripts
+    PlayerAPI.getAdminInfo(player.UserId) -- TBD: Cache first, faster loading in other scripts
 end)
 
 Players.PlayerRemoving:Connect(function(player: Player)
