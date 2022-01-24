@@ -48,8 +48,9 @@ export type BasePackage = {
     Container: {any} -- Container for the package, can store functions or data for that package
 }
 
-export type DatabaseBindings = {
-    any
+export type DataAPIBinding = {
+    get: (name: string, key: string) -> any,
+    set: (name: string, key: string, value: any) -> any
 }
 
 local module = {}
