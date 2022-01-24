@@ -5,16 +5,15 @@
 local MAX_TRY_LIMIT = 4
 
 return function(func: (any) -> (any), ...)
-    local result = {pcall(func, ...)}
-    local count = 1
-    
-    while not result[1] and count <= MAX_TRY_LIMIT do
+    local result = nil
+    for _ = 1, 4 do
         result = {pcall(func, ...)}
-        count += 1
+        if result[1] then
+            break
+        end
     end
-
     if not result[1] then
-        warn("pcall failed: " .. tostring(result[2]))
+        warn("pcall | process exited with error: " .. tostring(result[2]))
     end
 
     return table.remove(result, 1), unpack(result)
