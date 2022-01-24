@@ -1,8 +1,4 @@
--- Finder.lua
--- 7kayoh/finder
--- https://github.com/7kayoh/finder.git
-
-export type Condition = (object: Instance) -> (boolean)
+export type Condition = (index: any, object: Instance) -> (boolean)
 export type Behavior = (result: {Instance}) -> ()
 
 local Finder = { Templates = {} }
@@ -17,7 +13,7 @@ function Finder.find(target: {Instance}, condition: Condition, behavior: Behavio
         local status: boolean, response: boolean|string = pcall(condition, index, value)
         if status and response then
             result[index] = value
-        else
+        elseif not status then
             warn("Finder can not perform find on object " .. value:GetFullName() .. " due to " .. tostring(response))
         end
     end
