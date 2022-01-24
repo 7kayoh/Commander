@@ -30,7 +30,7 @@ function Data.set(name: string, key: string, value: any): (boolean, string?)
 end
 
 function Data.bind(bindings: ModuleScript): boolean
-    if Data.Binded then return end
+    if Data.Binded then return false end
     local bindings: Typings.DataAPIBinding = require(bindings)
     bindings._onInit()
     Data._bindings = bindings
