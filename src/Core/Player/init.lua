@@ -71,7 +71,9 @@ function Player.getProfile(player: Player): {any}
         if profile._instance then
             return profile._instance.Character or profile._instance.CharacterAppearanceLoaded:Wait()
         end
+
         warn("Player " .. profile.UserId .. " left already")
+        return nil
     end
 
     function profile.Latency(): number?
@@ -80,6 +82,7 @@ function Player.getProfile(player: Player): {any}
         end
 
         warn("Player " .. profile.UserId .. " left already")
+        return 0
     end
 
     function profile:GetPackage(Id: string): {any}?
@@ -92,15 +95,16 @@ function Player.getProfile(player: Player): {any}
     end
 
     for _, module: ModuleScript in ipairs(Player.Extensions.PlayerProfile) do
-        local status: boolean, response: string|{string: any} = pcall(require(module).Target.Main, profile)
-        if status then
+        local package: Typings.BasePackage = require(module)
+        local status: boolean, response: string|{string: any} = pcall(package.Target.Main, profile)
+        if status and typeof(response) == "table" then
             local packageTable = {}
             for index: number|string, data: any in pairs(response) do
                 packageTable[index] = data
             end
-            profile.Packages[module.Id] = packageTable
+            profile.Packages[package.Id] = packageTable
         else
-            warn("Skipping package " .. module.Id .. " as process exited with an error: " .. response)
+            warn("Skipping package " .. package.Id .. " as process exited with an error: " .. response)
         end
     end
 
@@ -112,7 +116,9 @@ function Player.addChecker(checker: ModuleScript): boolean
         table.insert(Player.Extensions.Checkers, checker)
         return true
     end
+
     warn("Checker " .. checker:GetFullName() .. " already added")
+    return false
 end
 
 function Player.addDataFetcher(fetcher: ModuleScript): boolean
@@ -121,12 +127,13 @@ function Player.addDataFetcher(fetcher: ModuleScript): boolean
         table.insert(Player.Extensions.DataFetchers, fetcher)
         return true
     end
+    
     warn("Fetcher " .. fetcher:GetFullName() .. " already added")
+    return false
 end
 
 function Player._onInit()
     Player._OnInit = nil
-    require(script.Runner)
 end
 
 return Player
