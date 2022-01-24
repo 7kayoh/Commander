@@ -55,7 +55,7 @@ return function(configuration: ModuleScript, packages: Folder)
         end
     end
 
-    for _, package in ipairs(packages) do
+    for _, package in ipairs(packages:GetChildren()) do
         MainAPI.addPackage(package)
     end
 
