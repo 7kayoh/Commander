@@ -45,11 +45,11 @@ end
 
 function Finder.getTemplate(category: string, name: string): Condition|boolean
     if not Finder.Templates[category] then
-        warn("Category " .. string .. " does not exist")
+        warn("Category " .. category .. " does not exist")
         return dummyTemplate
     end
     if not Finder.Templates[category][name] then
-        warn("Condition " .. string .. " does not exist in category " .. category)
+        warn("Condition " .. name .. " does not exist in category " .. category)
         return dummyTemplate
     end
 
