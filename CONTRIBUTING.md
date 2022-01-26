@@ -5,7 +5,7 @@
 This document (CONTRIBUTING.md) includes guidelines, coding styleguides, resources and documentations related to contributing to Commander. Most of the content here are not fully required nor enforced strictly. If you happen to find one of them being misleading, or is not optimal enough. Feel free to propose changes by creating a pull request.
 
 ## Table of Contents
-- [Code of Conduct](https://github.com/va1kio/commander/blob/main/CODE_OF_CONDUCT.md)
+- [Code of Conduct](https://github.com/7kayoh/commander/blob/main/CODE_OF_CONDUCT.md)
 - [Contributing](#Contributing)
   * [Reporting a bug](#Reporting-a-bug)
   * [Patching a bug](#Patching-a-bug)
@@ -52,7 +52,7 @@ If you have managed to patch a bug you've discovered or reported in the issues l
 Do **not** submit a pull request for cosmetic or code formatting changes, instead, create a new issue.
 
 #### Proposing changes to the documentation
-Our documentaton uses a different [repository](https://github.com/va1kio/commander-site). Before submitting a pull request, check whether your changes will not cause any sort of errors. We uses VuePress for documentation.
+Our documentaton uses a different [repository](https://github.com/7kayoh/commander-site). Before submitting a pull request, check whether your changes will not cause any sort of errors. We uses VuePress for documentation.
 
 #### Something else
 If none of your contribution falls under this document, please create an issue first.
