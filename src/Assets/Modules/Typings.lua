@@ -41,7 +41,7 @@ export type RemoteBody = {
 
 export type BasePackage = {
     Name: string, -- Name of package
-    Id: string, -- Unique identifier of package, must not include space or symbols
+    Id: string, -- Unique identifier of package, must not include space or symbols, case insensitive
     Description: string?, -- Description of package, optional
     Category: string, -- Category of the package, usable for commands
     Type: string, -- Type of the package: Commands/Extensions/Stylesheets
