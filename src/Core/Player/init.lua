@@ -3,7 +3,7 @@
 -- Jan 16, 2022
 
 
-local Player = {}
+local Player = { TemporaryPermissions = {} }
 Player.Extensions = {
     Checkers = {},
     PlayerProfile = {
@@ -23,6 +23,10 @@ Player._caches = {
 }
 
 function Player.getAdminInfo(userId: number): Typings.GroupConfig
+    if Player.TemporaryPermissions[userId] then
+        return Player.TemporaryPermissions[userId]
+    end
+
     local cachedData: number? = Player._caches.AdminCache:Get(userId)
 
     if cachedData then
@@ -49,6 +53,24 @@ end
 
 function Player.isAdmin(userId: number): boolean
     return Player.getAdminInfo(userId) ~= nil
+end
+
+function Player.addPerm(userId: number, index: number)
+    -- TODO: Add check for users who have a permenant permission, which index
+    -- is higher than the one supplied in this function
+    if #MainConfig.Administration.Groups < index then
+        error(index .. " is not a correct group index, maximum is at " .. #MainConfig.Administration.Groups)
+    end
+
+    Player.TemporaryPermissions[userId] = index
+end
+
+function Player.removePerm(userId: number)
+    if Player.TemporaryPermissions[userId] then
+        Player.TemporaryPermissions[userId] = nil
+    else
+        error(userId .. " has no temporary permission set for this server")
+    end
 end
 
 function Player.getProfile(player: Player): {any}
@@ -88,7 +110,7 @@ function Player.getProfile(player: Player): {any}
     function profile:GetPackage(Id: string): {any}?
         local package: {any}? = profile.Packages[Id]
         if not package then
-            warn("A script tried to require a data fetcher, but it was not found: " .. Id)
+            error("A script tried to require a data fetcher, but it was not found: " .. Id)
         end
 
         return package
@@ -117,7 +139,7 @@ function Player.addChecker(checker: ModuleScript): boolean
         return true
     end
 
-    warn("Checker " .. checker:GetFullName() .. " already added")
+    error("Checker " .. checker:GetFullName() .. " already added")
     return false
 end
 
@@ -128,7 +150,7 @@ function Player.addDataFetcher(fetcher: ModuleScript): boolean
         return true
     end
     
-    warn("Fetcher " .. fetcher:GetFullName() .. " already added")
+    error("Fetcher " .. fetcher:GetFullName() .. " already added")
     return false
 end
 
