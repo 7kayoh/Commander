@@ -32,10 +32,13 @@ All usernames in files of this repository represents their username in the inter
 
 ## ❓ Questions
 - If you are not a developer and is currently waiting for a production-ready or GA build of Commander V2...
+<br>
 Visit the [releases kanban](https://trello.com/b/U5FbxPOL/commander-releases)
 
 - If you want to suggest a new feature...
+<br>
 Visit the [suggestion kanban](https://trello.com/b/gJiCcrc6/commander-panel)
 
-- If you are looking for V1
+- If you are looking for V1...
+<br>
 Switch to the [main branch](https://github.com/7kayoh/commander.git)
