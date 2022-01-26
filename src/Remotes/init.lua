@@ -2,7 +2,6 @@ local Module = {}
 
 return setmetatable(Module, {
     __call = function(_, alias: Instance)
-        warn("Alias set to " .. alias:GetFullName())
         Module.Alias = alias
     end,
 
