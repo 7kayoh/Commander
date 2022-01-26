@@ -13,56 +13,56 @@ local pcall = require(SharedAssets.pcall)
 
 local SocialKit = {}
 
-function SocialKit.getTextFilter(message: string, from: number): (boolean, TextFilterResult|string)
-    return pcall(TextService.FilterStringAsync, TextService, message, from)
+function SocialKit.getTextFilter(message: string, from: number): TextFilterResult?
+    return TextService:FilterStringAsync(message, from)
 end
 
-function SocialKit.canUserChat(user: number): (boolean, boolean|string)
-    return pcall(Chat.CanUserChatAsync, user)
+function SocialKit.canUserChat(user: number): boolean?
+    return Chat:CanUserChatAsync(user)
 end
 
-function SocialKit.filterChat(message: string, from: number, to: number): (boolean, string)
-    local status, result = SocialKit.canUserChat(to)
+function SocialKit.filterChat(message: string, from: number, to: number): string?
+    local status, result = pcall(SocialKit.canUserChat(to))
     if not status or not result then
-        return false, "This user (" .. to .. ") can not chat"
+        error("This user (" .. to .. ") can not chat")
     end
 
-    status, result = SocialKit.getTextFilter(message, from)
+    status, result = pcall(SocialKit.getTextFilter(message, from))
     if status then
-        return pcall(result.GetChatForUserAsync, result, to)
+        return result:GetChatForUserAsync(result, to)
     end
 
-    return status, result
+    error(result)
 end
 
-function SocialKit.filterBroadcast(message: string, from: number): (boolean, string)
-    local status, result = SocialKit.getTextFilter(message, from)
+function SocialKit.filterBroadcast(message: string, from: number): string?
+    local status, result = pcall(SocialKit.getTextFilter(message, from))
     if status then
-        return pcall(result.GetNonChatStringForBroadcastAsync, result)
+        return result:GetNonChatStringForBroadcastAsync(result)
     end
     
-    return status, result
+    error(result)
 end
 
-function SocialKit.isUserSafeChat(user: Player): (boolean, boolean|string)
+function SocialKit.isUserSafeChat(user: Player): boolean?
     -- this is an approximate way to determine whether the user is within the
     -- age group for SafeChat, and should only be used for verification only
     local status, result = pcall(PolicyService:GetPolicyInfoForPlayerAsync(user))
 
     if status then
-        return status, (not table.find(result, "Discord") and not result.IsSubjectToChinaPolices)
+        return not table.find(result, "Discord") and not result.IsSubjectToChinaPolices
     else
-        return status, result
+        error(result)
     end
 end
 
-function SocialKit.getUserRegion(user: Player): (boolean, string|{string})
+function SocialKit.getUserRegion(user: Player): {string}?
     local status, result = pcall(LocalizationService.GetCountryRegionForPlayerAsync, LocalizationService, user)
     if status then
-        result = {result, CountryCodes[result]}
+        return {result, CountryCodes[result]}
+    else
+        error(status)
     end
-
-    return status, result
 end
 
 return SocialKit

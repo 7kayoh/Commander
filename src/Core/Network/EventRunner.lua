@@ -15,7 +15,7 @@ Remotes.RemoteEvent.OnServerEvent:Connect(function(player: Player, body: Typings
     if method then
         method(player, body.data)
     else
-        warn(3, body.Method .. " is not a valid member of " .. Methods.Events:GetFullName())
+        error(3, body.Method .. " is not a valid member of " .. Methods.Events:GetFullName())
     end
 end)
 

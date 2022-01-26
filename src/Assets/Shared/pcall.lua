@@ -12,8 +12,9 @@ return function(func: (any) -> (any), ...)
             break
         end
     end
+    
     if not result[1] then
-        warn("pcall | process exited with error: " .. tostring(result[2]))
+        error("pcall | process exited with error: " .. tostring(result[2]))
     end
 
     return table.remove(result, 1), unpack(result)

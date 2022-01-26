@@ -14,7 +14,7 @@ function Finder.find(target: {Instance}, condition: Condition, behavior: Behavio
         if status and response then
             result[index] = value
         elseif not status then
-            warn("Finder can not perform find on object " .. value:GetFullName() .. " due to " .. tostring(response))
+            error("Finder can not perform find on object " .. value:GetFullName() .. " due to " .. tostring(response))
         end
     end
 
@@ -31,7 +31,7 @@ function Finder.addTemplate(category: string, name: string, condition: Condition
     end
 
     if Finder.Templates[category][name] then
-        warn("This Finder template already exists: " .. name)
+        error("This Finder template already exists: " .. name)
         return false
     else
         Finder.Templates[category][name] = condition
@@ -41,11 +41,11 @@ end
 
 function Finder.getTemplate(category: string, name: string): Condition|boolean
     if not Finder.Templates[category] then
-        warn("Category " .. category .. " does not exist")
+        error("Category " .. category .. " does not exist")
         return dummyTemplate
     end
     if not Finder.Templates[category][name] then
-        warn("Condition " .. name .. " does not exist in category " .. category)
+        error("Condition " .. name .. " does not exist in category " .. category)
         return dummyTemplate
     end
 
