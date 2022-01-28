@@ -12,7 +12,10 @@ Main.Configs = Commander.Configs
 Main.Packages = Commander.Packages
 Main.Remotes = require(Commander.Remotes)
 
+local SharedAssets = require(Main.Assets.Shared)
+
 local Typings = require(Main.Assets.Modules.Typings)
+local GlobConstants = require(SharedAssets.Constants)
 
 function Main.addPackage(package: ModuleScript)
     local loadedPackage: Typings.BasePackage = require(package)
@@ -33,6 +36,20 @@ function Main.findPackage(packageId: string): Typings.BasePackage?
             return require(alias)
         end
     end
+end
+
+function Main.getVersion(pattern: string): string
+    local patterns = {
+        ["%SV%"] = GlobConstants.Version[1],
+        ["%CN%"] = GlobConstants.Version[2],
+        ["%LC%"] = GlobConstants.Version[3]
+    }
+
+    pattern = pattern:gsub("%%%w+%%", function(text)
+        return patterns[text] or text
+    end)
+
+    return pattern
 end
 
 return Main
