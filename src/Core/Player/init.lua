@@ -89,6 +89,7 @@ function Player.getProfile(player: Player): {any}
     function profile.IsAdmin(): boolean
         return Player.isAdmin(profile.UserId)
     end
+    
     function profile.Character(): Model?
         if profile._instance then
             return profile._instance.Character or profile._instance.CharacterAppearanceLoaded:Wait()
