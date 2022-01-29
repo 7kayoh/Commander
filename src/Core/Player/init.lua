@@ -2,14 +2,7 @@
 -- hiyorisaka & 7kayoh
 -- Jan 16, 2022
 
-
-local Player = { TemporaryPermissions = {} }
-Player.Extensions = {
-    Checkers = {},
-    PlayerProfile = {
-        DataFetchers = {}
-    }
-}
+local Players = game:GetService("Players")
 
 local MainAPI = require(script.Parent.Main)
 local SharedAssets = require(MainAPI.Assets.Shared)
@@ -18,17 +11,21 @@ local Kache = require(SharedAssets.Kache)
 local Typings = require(MainAPI.Assets.Modules.Typings)
 local MainConfig: Typings.MainConfig = require(MainAPI.Configs.MainConfig)
 
-Player._caches = {
-    AdminCache = Kache.new()
+local Player = {
+    TemporaryPermissions = {},
+    Extensions = {
+        Checkers = {},
+        PlayerProfile = {
+            DataFetchers = {}
+        }
+    },
+    _caches = {
+        AdminCache = Kache.new()
+    }
 }
 
 function Player.getAdminInfo(userId: number): Typings.GroupConfig
-    if Player.TemporaryPermissions[userId] then
-        return Player.TemporaryPermissions[userId]
-    end
-
     local cachedData: number? = Player._caches.AdminCache:Get(userId)
-
     if cachedData then
         return MainConfig.Groups[cachedData]
     else
@@ -53,24 +50,6 @@ end
 
 function Player.isAdmin(userId: number): boolean
     return Player.getAdminInfo(userId) ~= nil
-end
-
-function Player.addPerm(userId: number, index: number)
-    -- TODO: Add check for users who have a permenant permission, which index
-    -- is higher than the one supplied in this function
-    if #MainConfig.Administration.Groups < index then
-        error(index .. " is not a correct group index, maximum is at " .. #MainConfig.Administration.Groups)
-    end
-
-    Player.TemporaryPermissions[userId] = index
-end
-
-function Player.removePerm(userId: number)
-    if Player.TemporaryPermissions[userId] then
-        Player.TemporaryPermissions[userId] = nil
-    else
-        error(userId .. " has no temporary permission set for this server")
-    end
 end
 
 function Player.getProfile(player: Player): {any}
@@ -133,6 +112,7 @@ function Player.getProfile(player: Player): {any}
 
     return profile
 end 
+
 function Player.addChecker(checker: ModuleScript): boolean
     assert(type(require(checker).Target.Main) == "function", "Checker must include a function called Main inside Package.Target")
     if not table.find(Player.Extensions.Checkers, checker) then
@@ -157,6 +137,13 @@ end
 
 function Player._onInit()
     Player._OnInit = nil
+    Players.PlayerAdded:Connect(function(player: Player)
+        Player.getAdminInfo(player.UserId) -- TBD: Cache first, faster loading in other scripts
+    end)
+    Players.PlayerRemoving:Connect(function(player: Player)
+        Player._caches.AdminCache:Unset(player.UserId) -- GC: Clean cache of that user
+        
+    end)
 end
 
 return Player
