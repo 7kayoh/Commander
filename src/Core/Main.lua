@@ -18,21 +18,23 @@ local Typings = require(Main.Assets.Modules.Typings)
 local GlobConstants = require(SharedAssets.Constants)
 
 function Main.addPackage(package: ModuleScript)
-    local loadedPackage: Typings.BasePackage = require(package)
+    if package.Name:match(".pkg$") then
+        local loadedPackage: Typings.BasePackage = require(package)
 
-    if table.find(Main.ACCEPTED_PACKAGE_TYPE, loadedPackage.Type) then
-        Main.PackageAliases[loadedPackage.Id:lower()] = package
-        package.Parent = Main.Packages[loadedPackage.Type]
+        if table.find(Main.ACCEPTED_PACKAGE_TYPE, loadedPackage.Type) then
+            Main.PackageAliases[loadedPackage.Id:lower()] = package
+            package.Parent = Main.Packages[loadedPackage.Type]
 
-        if loadedPackage.Container._OnInit then
-            loadedPackage.Container._OnInit(script)
+            if loadedPackage.Container._OnInit then
+                loadedPackage.Container._OnInit(script)
+            end
         end
     end
 end
 
 function Main.addPackageDir(directory: Folder)
     for _, instance in ipairs(directory:GetChildren()) do
-        if instance:IsA("ModuleScript") then
+        if instance:IsA("ModuleScript") and instance.Name:match(".pkg$") then
             Main.addPackage(instance)
         end
     end
