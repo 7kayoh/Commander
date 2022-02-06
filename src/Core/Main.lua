@@ -2,7 +2,7 @@
 -- 7kayoh
 -- Jan 16, 2022
 
-local Main = { PackageAliases = {} }
+local Main = { PackageAliases = {}, Binders = {} }
 local Commander = script.Parent.Parent
 
 Main.ACCEPTED_PACKAGE_TYPE = { "Commands", "Extensions", "Stylesheets" }
@@ -46,6 +46,11 @@ function Main.findPackage(packageId: string): Typings.BasePackage?
 			return require(alias)
 		end
 	end
+end
+
+function Main.addBinder(binder: Typings.BaseBinder)
+	assert(Main.Binders[binder.BindType], "Binder already exists")
+	Main.Binders[binder.BindType] = binder.Callback
 end
 
 function Main.getVersion(pattern: string): string
