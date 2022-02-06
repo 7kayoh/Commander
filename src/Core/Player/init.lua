@@ -24,7 +24,13 @@ local Player = {
 	},
 }
 
-function Player.getAdminInfo(userId: number): Typings.GroupConfig
+function Player.getAdminInfo(userId: number): Typings.GroupConfig?
+	--[[
+	local binder = MainAPI.Binders.GetAdminInfo
+	if binder then return binder(userId) else return nil end
+	-- todo: expand and save with cache
+	--]]
+
 	local cachedData: number? = Player._caches.AdminCache:Get(userId)
 	if cachedData then
 		return MainConfig.Groups[cachedData]
@@ -53,10 +59,6 @@ function Player.getAdminInfo(userId: number): Typings.GroupConfig
 	end
 end
 
-function Player.isAdmin(userId: number): boolean
-	return Player.getAdminInfo(userId) ~= nil
-end
-
 function Player.getProfile(player: Player): { any }
 	local profile = {
 		Packages = {},
@@ -66,21 +68,12 @@ function Player.getProfile(player: Player): { any }
 		_instance = player,
 	}
 
-	function profile.AdminInfo(): Typings.GroupConfig
-		return Player.getAdminInfo(profile.UserId) or {}
+	function profile.AdminInfo(): Typings.GroupConfig?
+		return Player.getAdminInfo(profile.UserId)
 	end
 
 	function profile.IsAdmin(): boolean
-		return Player.isAdmin(profile.UserId)
-	end
-
-	function profile.Character(): Model?
-		if profile._instance then
-			return profile._instance.Character or profile._instance.CharacterAppearanceLoaded:Wait()
-		end
-
-		warn("Player " .. profile.UserId .. " left already")
-		return nil
+		return profile.AdminInfo() ~= nil
 	end
 
 	function profile.Latency(): number?
