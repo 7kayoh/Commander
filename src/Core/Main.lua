@@ -30,6 +30,14 @@ function Main.addPackage(package: ModuleScript)
     end
 end
 
+function Main.addPackageDir(directory: Folder)
+    for _, instance in ipairs(directory:GetChildren()) do
+        if instance:IsA("ModuleScript") then
+            Main.addPackage(instance)
+        end
+    end
+end
+
 function Main.findPackage(packageId: string): Typings.BasePackage?
     for name, alias in pairs(Main.PackageAliases) do
         if name == packageId:lower() then
