@@ -33,7 +33,7 @@ function Main.addPackage(package: ModuleScript)
 end
 
 function Main.addPackageDir(directory: Folder)
-    for _, instance in ipairs(directory:GetChildren()) do
+    for _, instance in ipairs(directory:GetDescendants()) do
         if instance:IsA("ModuleScript") and instance.Name:match(".pkg$") then
             Main.addPackage(instance)
         end
