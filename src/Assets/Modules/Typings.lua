@@ -53,6 +53,11 @@ export type DataAPIBinding = {
 	set: (name: string, key: string, value: any) -> any,
 }
 
+export type BaseBinder = {
+	BindType: string,
+	Callback: (any) -> (any)
+}
+
 local module = {}
 
 return module
