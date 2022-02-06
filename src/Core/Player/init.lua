@@ -39,7 +39,7 @@ function Player.getAdminInfo(userId: number): Typings.GroupConfig
                 end
                 continue
             elseif not status then
-                error("Error occurred when checking player's admin with checker " .. module:GetFullName() .. "\n\n" .. response, 2)
+                error("Error occurred when checking player's admin with checker " .. module:GetFullName() .. "\n\n" .. response)
             end
         end
     
