@@ -3,6 +3,4 @@ local Core = Network.Parent
 
 local MainAPI = require(Core.Main)
 
-return function(player: Player)
-    
-end
+return function(player: Player) end

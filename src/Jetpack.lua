@@ -16,49 +16,49 @@ local Modules = Assets.Modules
 local Typings = require(Modules.Typings)
 
 local function moveSharedAssets()
-    local sharedFolder = Instance.new("Folder")
-    sharedFolder.Name = "CommanderShared"
-    for _, children in ipairs(Assets.Shared:GetChildren()) do
-        children.Parent = sharedFolder
-    end
-    sharedFolder.Parent = ReplicatedStorage
+	local sharedFolder = Instance.new("Folder")
+	sharedFolder.Name = "CommanderShared"
+	for _, children in ipairs(Assets.Shared:GetChildren()) do
+		children.Parent = sharedFolder
+	end
+	sharedFolder.Parent = ReplicatedStorage
 
-    require(Assets.Shared)(sharedFolder)
+	require(Assets.Shared)(sharedFolder)
 end
 
 local function setupRemotes()
-    local remotesFolder = Instance.new("Folder")
-    remotesFolder.Name = "CommanderRemotes"
-    for _, children in ipairs(Remotes:GetChildren()) do
-        children.Parent = remotesFolder
-    end
-    remotesFolder.Parent = ReplicatedStorage
+	local remotesFolder = Instance.new("Folder")
+	remotesFolder.Name = "CommanderRemotes"
+	for _, children in ipairs(Remotes:GetChildren()) do
+		children.Parent = remotesFolder
+	end
+	remotesFolder.Parent = ReplicatedStorage
 
-    require(Remotes)(remotesFolder)
+	require(Remotes)(remotesFolder)
 end
 
 return function(configuration: ModuleScript, packages: Folder)
-    print("Setting up Commander...")
-    local loadedConfig: Typings.MainConfig = require(configuration) -- For typechecking purposes
+	print("Setting up Commander...")
+	local loadedConfig: Typings.MainConfig = require(configuration) -- For typechecking purposes
 
-    print("Running Jetpack...")
-    moveSharedAssets()
-    setupRemotes()
-    configuration.Name = "MainConfig"
-    configuration.Parent = Configs
-    packages.Parent = Packages.Unloaded
+	print("Running Jetpack...")
+	moveSharedAssets()
+	setupRemotes()
+	configuration.Name = "MainConfig"
+	configuration.Parent = Configs
+	packages.Parent = Packages.Unloaded
 
-    local MainAPI = require(Core.Main)
-    for _, API: ModuleScript in ipairs(Core:GetChildren()) do
-        if API ~= Core.Main then
-            API = require(API)
-            if API._onInit then
-                API._onInit()
-            end
-        end
-    end
+	local MainAPI = require(Core.Main)
+	for _, API: ModuleScript in ipairs(Core:GetChildren()) do
+		if API ~= Core.Main then
+			API = require(API)
+			if API._onInit then
+				API._onInit()
+			end
+		end
+	end
 
-    MainAPI.addPackageDir(packages)
-    -- TBD
-    -- Should be done afterward.
+	MainAPI.addPackageDir(packages)
+	-- TBD
+	-- Should be done afterward.
 end
